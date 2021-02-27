@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="../Scripts/jquery-3.4.1.min.js"></script>
+    <style type="text/css">
+
+        td {
+            width: 300px;
+            font-size: 20px;
+        }
+        img {
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="../Scripts/ajaxCallsWithKey.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("Im-ready!");
+            $("#getFav").click(getFavorites);
+
+        });
+
+        function getFavorites() {
+            console.log("hey!");
+            ajaxCall("GET", "../api/Businesses", "", getSuccess, getError);
+        }
+        function getSuccess(businesses) {
+            console.log(businesses);
+            Busin = businesses;
+            $("#showFav").empty();
+            $("#showFav").html("");
+            st = "<div class='container mt-3'>";
+            for (var i = 0; i < Busin.length; i++) {
+                st += "<div class='media border p-3'>";
+                st += "<div><p><b>ID:</b> " + Busin[i].Id + "</p>";
+                st += "<img src=' " + Busin[i].Photo + "'class='mr-3 mt-3 rounded-circle'/>";
+                st += "<div class='media-body'>";
+                st += "<h4><b>Name:</b> " + Busin[i].Name + " <small><i></i></small></h4>";
+                st += "<p><b>Category:</b> " + Busin[i].Category + "</p>";
+                st += "<p><b>Rating:</b> " + Busin[i].Rating + "</p>";
+                st += "<p><b>Price Range:</b> " + Busin[i].PriceRange + "</p>";
+                st += "<p><b>Address:</b> " + Busin[i].Address + "</p>";
+                st += "<p><b>Phone:</b> " + Busin[i].Phone + "</p>";
+                st += "<p><b>Link:</b> " + Busin[i].LinkUrl + "</p>";
+                st += "</div>";
+                st += "</div></div>";
+            }
+            $("#showFav").append(st);
+        }
+
+        function getError(err) {
+            console.log(err);
+        }
+
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>My Favorites</h2>
+
+        <button id="getFav" type="button" class="btn btn-primary">Show my Favorites</button>
+        <button id="backTo" onclick="document.location='businesses.html'" type="button" class="btn btn-secondary">Back to Page</button>
+
+    </div>
+
+    <div id="showFav">
+
+    </div>
+
+</body>
+</html>

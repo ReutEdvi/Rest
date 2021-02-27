@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap 4 Website Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .fakeimg {
+            height: 200px;
+            /*background: #aaa;*/
+        }
+        .wrap {
+            /*display: flex;*/
+            justify-content: space-between;
+        }
+
+        .logo {
+            overflow: hidden;
+            text-align: left;
+            position: relative;
+            height: 60px;
+            background-color: white;
+            color: #1F6C8B;
+            font-family: Arial;
+        }
+        #hello_user {
+            margin-left: 600px;
+        }
+        img {
+            height: 100px;
+            width: 100px;
+        }
+
+    </style>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            console.log("ready!");
+            checkUser();
+            ShowCampaign();
+            //$("#cuisine").change(function (e) {
+            //    e.preventDefault();
+            //    renderResturandNonRegister();
+            //});
+            //$("#cuisine").change(renderResturandNonRegister);
+            //retrievedObject = localStorage.getItem('testObject');
+
+
+        });
+        function checkUser() {
+            if (localStorage["testObject"] != null) {
+                tastStr = JSON.parse(localStorage["testObject"]);
+                $("#userName").append(tastStr.email);
+                $("#cuisine").change(renderResturandForRegister);
+            }
+            else {
+                tastStr = [];
+                $("#cuisine").change(renderResturandNonRegister);
+            }
+        }
+        function renderResturandNonRegister() {
+            console.log("in NonRegister!");
+            valueCuis = $("#cuisine").val();
+            let api = "../api/Businesses?category=" + valueCuis;
+            ajaxCall("GET", api, "", getRenderSuccess, getRenderError);
+        }
+        function getRenderSuccess(data) {
+            console.log("in Success!");
+            console.log(data);
+            Data = data;
+            $("#cuiss").empty();
+            $("#cuiss").html("");
+            str = "<div class='container mt-3'>";
+            for (var i = 0; i < Data.length; i++) {
+                str += "<div class='media border p-3'>";
+                str += "<div><p><b>ID:</b> " + Data[i].Id + "</p>";
+                str += "<img src=' " + Data[i].Photo + "'class='mr-3 mt-3 rounded-circle'/>";
+                str += "<div class='media-body'>";
+                str += "<h4><b>Name:</b> " + Data[i].Name + " <small><i></i></small></h4>";
+                str += "<p><b>Category:</b> " + Data[i].Category + "</p>";
+                str += "<p><b>Rating:</b> " + Data[i].Rating + "</p>"; 
+                str += "<p><b>Price Range:</b> " + Data[i].PriceRange + "</p>";
+                str += "<p><b>Address:</b> " + Data[i].Address + "</p>";
+                str += "<p><b>Phone:</b> " + Data[i].Phone + "</p>";
+                str += "<p><b>Link:</b><a href=" + Data[i].LinkUrl + ">To The Site</a></p>";
+                str += "</div>";
+                str += "</div></div>";
+            }
+
+            $("#cuiss").append(str);
+        }
+        function getRenderError(err) {
+            console.log(err);
+        }
+        function renderResturandForRegister() {
+            console.log("im Register!");
+            valUserEmail = $("#userName").val();
+            valueCuis = $("#cuisine").val();
+            //let api1 = "../api/Businesses?category=" + valueCuis;
+            //shold build class with user email and category and highlight?????
+
+            //ajaxCall("GET", api, "", getRenderSuccess, getRenderError);
+
+
+        }
+
+        function ShowCampaign(){
+            console.log("get the Campaign");
+            valId = 16758591;
+            ajaxCall("GET", "../api/Businesses?id=" + valId, "", getCampaignSuccess, getCampaignError);
+        }
+
+
+        
+        function getCampaignSuccess(data) {
+            console.log("in CamppppppSuccess!");
+            console.log(data);
+            Data1 = data;
+            console.log(Data1.Id);
+            $("#campaignDiv").empty();
+            $("#campaignDiv").html("");
+            str = "<div class='container mt-3'>";
+            str += "<div class='media border p-3'>";
+            str += "<div><p><b>Name:</b> " + Data1.Name + "</p>";
+            str += "<img src=' " + Data1.Photo + "'class='mr-3 mt-3 rounded-circle'/>";
+            str += "<div class='media-body'>";
+            str += "<p><b>Category:</b> " + Data1.Category + "</p>";
+            str += "<p><b>Rating:</b> " + Data1.Rating + "</p>";
+            str += "<p><b>Price Range:</b> " + Data1.PriceRange + "</p>";
+            str += "<p><b>Address:</b> " + Data1.Address + "</p>";
+            str += "<p><b>Phone:</b> " + Data1.Phone + "</p>";
+            str += "<p><b>Link:</b><a href=" + Data1.LinkUrl + ">To The Site</a></p>";
+            //str += "<button  id='" + i + "'class='addFav'>Add to Favorites</button></div>";
+            str += "</div></div>";
+            $("#campaignDiv").append(str);
+            //str += "</div>";
+            //str += "</div></div>";
+        }
+        function getCampaignError(err) {
+            console.log(err);
+        }
+
+    </script>
+</head>
+<body>
+
+    <div class="jumbotron text-center" style="margin-bottom:0">
+        <h1>Restaurants in New York</h1>
+        <p>We have collected for you the best restaurants in the best city in the world!</p>
+    </div>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" href="#">Main</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="document.location='favorites.html'">Go to favorites</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="document.location='registration.html'">Registration</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="document.location='managerPage.html'">System Manager</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="document.location='chrkci.html'">Preferences</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="hello_user" href="#">hello<h5 id="userName"></h5></a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top:30px">
+        <div class="row">
+            <div class="col-sm-4">
+                <h2>New York</h2>
+                <h5>Best Dining in New York City, New York</h5>
+                <!--"<img src=' " + Data.restaurants[i].restaurant.featured_image + "' class='mr-3 mt-3 rounded-circle' />";-->
+                <div class="fakeimg"><img src="../Images/download (1).jpg" width="230" height="200" /></div>
+                <p>New York City restaurants and search by cuisine, price, location, and more.</p><br />
+
+                <h3>Types of kitchens</h3>
+                <p>search by cuisine</p><br />
+                <select id="cuisine" name="cuisine" class="custom-select"
+                        style="width:150px;">
+                    <option value="Cuisine type">Cuisine type</option>
+                    <option value="Indian">Indian</option>
+                    <option value="French">French</option>
+                    <option value="Italian">Italian</option>
+                    <option value="Mexican">Mexican</option>
+                    <option value="Chinese">Chinese</option>
+                    <option value="Japanese">Japanese</option>
+                    <option value="Greek">Greek</option>
+                </select><br />
+
+
+
+                <!--<ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>-->
+                <hr class="d-sm-none">
+            </div>
+            <div class="col-sm-8">
+                <h2>Our recommended restaurants</h2>
+                <h5>That you might like</h5>
+                <div class="fakeimg">
+                    <div id="campaignDiv">
+                    </div>
+
+
+                    <br>
+                    <h2>Results</h2>
+                    <div id="cuiss">
+
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+
+    <!--<div class="jumbotron text-center" style="margin-bottom:0">
+        <p>Footer</p>-->
+    </div>
+</body>
+</html>
